@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<title>BJJ timer</title>
+<head>
+<style>
+@font-face {
+  font-family: clockFont;
+  src: url(TickingTimebombBB.ttf);
+}
+body{
+  background-color: black;
+  text-align:center;
+  color:white;
+}
+#rounds{
+  font-family: "clockFont", Times, serif;
+  font-size: 300px;
+  margin: 0px;
+  background-color: black;
+  color:#FC3004;
+  margin-top: 40px;
+}
+#time {
+  font-family: "clockFont", Times, serif;
+  font-size: 300px;
+  margin: 0px;
+  background-color: black;
+  color:#FC3004;
+  margin-top: 40px;
+}
+#time.running{
+ color: #04FC17;
+}
+#rounds{
+  color:#FC3004;
+}
+.form{
+  font-size: 1.7em;
+}
+.form button{
+  background-color: #04FC17;
+}
+
+.form input, .form button, select{
+      padding: 7px;
+      font-size: 1em;
+      margin-left: 1em;
+      margin-right: 1em;
+      padding-left:2em;
+      padding-right:2em;
+}
+#custombell{
+  font-size: 1.5em;
+}
+audio{
+  display:none;
+}
+
+#timerContainer {
+  margin-top:auto;
+  margin-bottom:auto;
+  position: absolute;
+  top: 35%;
+  transform: translateY(-40%);
+}
+#contact{
+      bottom: 1em;
+    position: absolute;
+    left: 45%;
+    right: auto;
+
+}
+#contact a{
+    color: white;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+
+window.rounds = 1;
+
+function addMinutes(minutes) {
+  const now = moment();
+  const newDateObj = now.add(minutes, 'm').add(5, 's').toDate();
+  return newDateObj;
+}
+
+function addSeconds(seconds) {
+  console.log('addSeconds', seconds);
+  const now = moment();
+  const newDateObj = now.add(seconds, 's').toDate();
+  return newDateObj;
+}
+
+function startTimer(seconds) {
+  console.log('startTimer', seconds);
+  return addSeconds(seconds);
+}
+
+function formatNumber(num){
+  return  ("0" + num).slice(-2);
+}
+
+function bell(fight,rest){
+  const selectedBell = $('#custombell').val();
+  var audio = document.getElementById(selectedBell);
+  audio.play();
+}
+
+function intervalFunction(countDownDate, fight, rest){
+    console.log('intervalFunction', countDownDate);
+    //Get today's date and time
+    var now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    var distance = countDownDate - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Display the result in the element with id="demo"
+    document.getElementById("time").innerHTML =   formatNumber(minutes) + ":" + formatNumber(seconds) + "";
+    document.getElementById("rounds").innerHTML =   formatNumber(window.rounds) + '&nbsp;';
+
+    //If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(window.countdown);
+      document.getElementById("time").innerHTML = "00:00";
+      $('#time').addClass('finished');
+      $('#time').removeClass('running');
+      if (fight ){
+        const event = new Event('fightDone');
+        // Dispatch the event.
+        window.dispatchEvent(event);
+      }
+      if (rest) {
+         const event = new Event('restDone');
+        // Dispatch the event.
+        window.dispatchEvent(event);
+      }
+
+    }
+}
+
+function updateDownCount(endTime, fight, rest){
+  // 1000 = refresh every second.
+  return  setInterval(intervalFunction, 1000, endTime, fight, rest);
+}
+
+function fight(){
+  $('#time').removeClass('finished');
+    $('#time').addClass('running');
+    if (typeof window.countdown != 'undefined') {
+      clearInterval(window.countdown);
+    }
+    const minutes = $('#round_minutes').val();
+    if (minutes <= 0) {
+      alert('minutes must be 1 or more');
+      return false;
+    }
+    bell(true,false);
+    display = document.querySelector('#time');
+    const endTime = startTimer(minutes * 60);
+    window.countdown = updateDownCount(endTime, true, false);
+}
+
+function rest(){
+  $('#time').removeClass('finished');
+    $('#time').addClass('running');
+    if (typeof window.countdown != 'undefined') {
+      clearInterval(window.countdown);
+    }
+    const rest = $('#rest_seconds').val();
+    if (rest >= 0) {
+      bell(false, true);
+      display = document.querySelector('#time');
+      const endTime = startTimer(rest);
+      window.countdown = updateDownCount(endTime, false, true);
+    }else{
+      const event = new Event('restDone');
+      // Dispatch the event.
+      window.dispatchEvent(event);
+    }
+
+}
+
+window.addEventListener('fightDone', function (e) {
+  rest();
+}, false);
+
+window.addEventListener('restDone', function (e) {
+  fight();
+  window.rounds = window.rounds + 1;
+}, false);
+
+
+$(document).ready(function(){
+  $("#start").click(function(){
+    fight();
+  });
+
+});
+</script>
+</head>
+<body>
+<div id="timerContainer">
+  <h1><span id="rounds">00</span>&nbsp;&nbsp;<span id="time">00:00</span></h1>
+  <div class="form">
+      <div class="line">
+        <input name="round_minutes" id="round_minutes" size="7" value="6" min="1"> min round &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <input name="rest_seconds" id="rest_seconds" size="7" value="15"> seconds rest &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <button id="start" type="submit">Start</button>
+      </div>
+
+  </div>
+  <br>
+  <select id="custombell">
+    <option  value="bell">Boxing bell 1</option>
+    <option selected value="bell2">Boxing bell 2</option>
+    <option value="bell3">AlarmClock</option>
+  </select>
+
+  <audio id="bell" controls>
+    <source src="bell.mp3"  type="audio/mpeg">
+  </audio>
+  <audio id="bell2" controls>
+    <source src="bell2.mp3"  type="audio/mpeg">
+  </audio>
+  <audio id="bell3" controls>
+    <source src="alarmclock.mp3"  type="audio/mpeg">
+  </audio>
+</div>
+<div id="contact"><a href="mailto:woutersf@gmail.com">contact</a></div>
+
+</body>
+</html>
