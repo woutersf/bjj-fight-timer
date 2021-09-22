@@ -1,7 +1,7 @@
 {
   "name": "Fight Timer",
   "short_name": "FightTimer",
-  "description": "boxing, Bjj, wrestling, grappling, fight timer",
+  "description": "Fight timer, great for boxing, Bjj, wrestling, grappling",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#000000",
