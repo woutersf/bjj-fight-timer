@@ -19,9 +19,9 @@
   font-family: clockFont;
   src: url(TickingTimebombBB.ttf);
 }
-html, body {
+/*html, body {
     height: 100%;
-}
+}*/
 body{
   background-color: black;
   text-align:center;
@@ -30,6 +30,7 @@ body{
 #rounds{
   font-family: "clockFont", Times, serif;
   font-size: 300px;
+  font-size: 4em;
   margin: 0px;
   background-color: black;
   color:#FC3004;
@@ -38,6 +39,7 @@ body{
 #time {
   font-family: "clockFont", Times, serif;
   font-size: 300px;
+  font-size: 5em;
   margin: 0px;
   background-color: black;
   color:#FC3004;
@@ -57,8 +59,8 @@ body{
 }
 
 .form input, .form button, select{
-      padding: 7px;
-      font-size: 1em;
+      padding: 3px;
+      font-size: 0.8em;
       margin-left: 1em;
       margin-right: 1em;
       padding-left:2em;
@@ -72,6 +74,7 @@ audio{
 }
 
 #timerContainer {
+  width: 100%;
   padding-top:4em;
   margin-top:auto;
   margin-bottom:auto;
@@ -94,6 +97,7 @@ audio{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="/js/nosleep.js"></script>
 <script>
+
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function() {
@@ -239,10 +243,8 @@ $(document).ready(function(){
   <h1><span id="rounds">00</span>&nbsp;&nbsp;<span id="time">00:00</span></h1>
   <div class="form">
       <div class="line">
-        <input name="round_minutes" id="round_minutes" size="7" value="6" min="1"> min round &nbsp;&nbsp;&nbsp;&nbsp;
-
-        <input name="rest_seconds" id="rest_seconds" size="7" value="15"> seconds rest &nbsp;&nbsp;&nbsp;&nbsp;
-
+        <input name="round_minutes" id="round_minutes" size="7" value="6" min="1"> minutes round<br>
+        <input name="rest_seconds" id="rest_seconds" size="7" value="15"> seconds rest<br>
         <button id="start" type="submit">Start</button>
       </div>
 
