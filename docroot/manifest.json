@@ -1,11 +1,12 @@
-manifest.json{
+{
   "name": "Fight Timer",
   "short_name": "FightTimer",
+  "description": "boxing, Bjj, wrestling, grappling, fight timer",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#04FC17",
-  "orientation": "portrait-primary",
+  "orientation": "landscape-primary",
   "icons": [
     {
       "src": "/images/icons/icon-72x72.png",
