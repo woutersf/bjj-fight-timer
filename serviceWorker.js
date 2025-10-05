@@ -1,13 +1,24 @@
-serviceWorker.jsconst staticDevCoffee = "dev-fighttimer-v1"
+const staticFightTimer = "fight-timer-v1"
 const assets = [
-  "/",
-  "/index.html",
+  "./",
+  "./index.html",
+  "./js/nosleep.js",
+  "./manifest.json",
+  "./bell.mp3",
+  "./bell2.mp3",
+  "./alarmclock.mp3",
+  "./beep-9.wav",
+  "./TickingTimebombBB.ttf",
+  "./android-chrome-192x192.png",
+  "./android-chrome-512x512.png",
+  "./icon-192x192.png",
+  "./icon-512x512.png"
 ]
 
 self.addEventListener("install", installEvent => {
   installEvent.waitUntil(
-    caches.open(staticDevCoffee).then(cache => {
-      cache.addAll(assets)
+    caches.open(staticFightTimer).then(cache => {
+      return cache.addAll(assets)
     })
   )
 })
